@@ -1,8 +1,7 @@
 import time
-import logging
 
-from device_config import BASE_CONST
-from channel import ChannelDevice, data_update_list, chart_update_list
+from channel import ChannelDevice, chart_update_list
+
 
 class IEM(ChannelDevice):
     def __init__(self, rx, cfg):

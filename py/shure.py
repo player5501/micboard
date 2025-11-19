@@ -1,12 +1,11 @@
-import time
-import select
-import queue
-import atexit
-import sys
 import logging
+import queue
+import select
+import sys
+import time
 
 from networkdevice import ShureNetworkDevice
-from channel import chart_update_list, data_update_list
+
 # from mic import WirelessMic
 # from iem import IEM
 
@@ -75,7 +74,7 @@ def SocketService():
         for rx in read_socks:
             try:
                 data = rx.f.recv(1024).decode('UTF-8')
-            except:
+            except Exception:
                 rx.socket_disconnect()
                 break
             # print("read: {} data: {}".format(rx.ip,data))
@@ -101,7 +100,7 @@ def SocketService():
                     rx.f.sendall(bytearray(string, 'UTF-8'))
                 elif rx.type == 'uhfr':
                     rx.f.sendto(bytearray(string, 'UTF-8'), (rx.ip, 2202))
-            except:
+            except Exception:
                 logging.warning("TX ERROR IP: %s String: %s", rx.ip, string)
 
 

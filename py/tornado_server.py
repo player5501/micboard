@@ -1,15 +1,16 @@
-import json
-import os
 import asyncio
-import socket
+import json
 import logging
+import os
+import socket
 
-from tornado import websocket, web, ioloop, escape
+from tornado import ioloop, web, websocket
 
-import shure
+import channel
 import config
 import discover
 import offline
+import shure
 
 
 # https://stackoverflow.com/questions/5899497/checking-file-extension
@@ -29,7 +30,7 @@ def localURL():
     try:
         ip = socket.gethostbyname(socket.gethostname())
         return 'http://{}:{}'.format(ip, config.config_tree['port'])
-    except:
+    except Exception:
         return 'https://micboard.io'
     return 'https://micboard.io'
 
@@ -91,18 +92,19 @@ class SocketHandler(websocket.WebSocketHandler):
         for c in cls.clients:
             try:
                 c.write_message(data)
-            except:
+            except Exception:
                 logging.warning("WS Error")
+
 
     @classmethod
     def ws_dump(cls):
         out = {}
-        if shure.chart_update_list:
-            out['chart-update'] = shure.chart_update_list
+        if channel.chart_update_list:
+            out['chart-update'] = channel.chart_update_list
 
-        if shure.data_update_list:
+        if channel.data_update_list:
             out['data-update'] = []
-            for ch in shure.data_update_list:
+            for ch in channel.data_update_list:
                 out['data-update'].append(ch.ch_json_mini())
 
         if config.group_update_list:
@@ -111,8 +113,8 @@ class SocketHandler(websocket.WebSocketHandler):
         if out:
             data = json.dumps(out)
             cls.broadcast(data)
-        del shure.chart_update_list[:]
-        del shure.data_update_list[:]
+        del channel.chart_update_list[:]
+        del channel.data_update_list[:]
         del config.group_update_list[:]
 
 class SlotHandler(web.RequestHandler):

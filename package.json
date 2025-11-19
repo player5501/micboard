@@ -4,9 +4,11 @@
   "description": "An intelligent mic tray for ethernet enabled Shure microphones.",
   "main": "main.js",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "server": "python py/micboard.py",
     "binary": "pyinstaller py/micboard.spec",
-    "build": "node node_modules/webpack/bin/webpack.js --progress --hide-modules --config=webpack.config.js",
     "app": "electron .",
     "pack": "node electron-build.js",
     "dist": "electron-builder",
@@ -24,32 +26,22 @@
   },
   "homepage": "https://github.com/karlcswanson/micboard",
   "dependencies": {
-    "@babel/core": "^7.6.0",
-    "@babel/preset-env": "^7.6.0",
-    "@babel/preset-react": "^7.0.0",
     "@ibm/plex": "^1.4.1",
     "@shopify/draggable": "^1.0.0-beta.8",
-    "babel-loader": "^8.0.6",
     "bootstrap": "^4.3.1",
-    "css-loader": "^2.1.1",
-    "file-loader": "^3.0.1",
     "jquery": "^3.4.1",
-    "node-gyp": "^4.0.0",
-    "node-sass": "^4.12.0",
     "popper.js": "^1.15.0",
     "qrcode": "^1.4.1",
-    "sass-loader": "^7.3.1",
     "smoothie": "^1.35.0",
-    "style-loader": "^0.23.1",
-    "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.8",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^13.2.0",
-    "eslint-plugin-import": "^2.18.2",
-    "electron": "^5.0.10",
-    "electron-builder": "^20.44.4"
+    "vite": "^5.0.0",
+    "sass": "^1.69.0",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.0",
+    "eslint": "^8.50.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.28.0"
   }
 }

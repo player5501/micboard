@@ -1,10 +1,10 @@
-import time
 import re
+import time
 from collections import defaultdict
-import logging
+
+from device_config import BASE_CONST
 
 import config
-from device_config import BASE_CONST
 
 chart_update_list = []
 data_update_list = []

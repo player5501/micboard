@@ -1,13 +1,13 @@
-import time
+import logging
 import queue
 import socket
+import time
 from collections import defaultdict
-import logging
 
 from device_config import BASE_CONST
+
 from iem import IEM
 from mic import WirelessMic
-
 
 PORT = 2202
 
@@ -40,7 +40,7 @@ class ShureNetworkDevice:
 
             for string in self.get_all():
                 self.writeQueue.put(string)
-        except socket.error as e:
+        except socket.error:
             self.set_rx_com_status('DISCONNECTED')
 
         self.socket_watchdog = int(time.perf_counter())
@@ -84,7 +84,7 @@ class ShureNetworkDevice:
 
                 elif split[0] in ['REP', 'REPORT']:
                     self.raw[split[1]] = ' '.join(split[2:])
-            except:
+            except Exception:
                 logging.warning("Index Error(RX): %s", data)
 
 

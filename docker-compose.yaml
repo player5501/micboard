@@ -1,11 +1,16 @@
-version: '2'
+version: '3.8'
 
 services:
-  # -------- Micboard -----------
   micboard:
+    build: .
     image: micboard
     container_name: micboard
     ports:
       - '8058:8058'
     volumes:
+      # Mount config directory for persistence
       - ./config:/root/.local/share/micboard
+      # Mount data files if they are meant to be editable
+      - ./data.json:/app/data.json
+      - ./dcid.json:/app/dcid.json
+      - ./democonfig.json:/app/democonfig.json

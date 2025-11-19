@@ -1,11 +1,10 @@
 import threading
 import time
 
-
 import config
-import tornado_server
-import shure
 import discover
+import shure
+import tornado_server
 
 
 def main():

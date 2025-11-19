@@ -1,1 +1,2 @@
-tornado
+tornado>=6.3.3
+ruff>=0.1.0

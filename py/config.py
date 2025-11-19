@@ -1,14 +1,14 @@
-import os
-import sys
+import argparse
 import json
 import logging
-import argparse
-import uuid
+import os
+import sys
 import time
+import uuid
 from shutil import copyfile
 
-import shure
 import offline
+import shure
 import tornado_server
 
 APPNAME = 'micboard'
@@ -248,7 +248,7 @@ def update_slot(data):
     if save_name:
         try:
             slot_cfg['chan_name_raw'] = shure.get_network_device_by_slot(data['slot']).chan_name_raw
-        except:
+        except Exception:
             pass
 
     elif 'chan_name_raw' in slot_cfg:

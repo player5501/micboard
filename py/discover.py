@@ -1,18 +1,16 @@
-import socket
-import struct
 import json
-import time
-
 import os
 import platform
-from optparse import OptionParser
+import socket
+import struct
 import sys
-
-
+import time
 import xml.etree.ElementTree as ET
+from optparse import OptionParser
+
+from device_config import BASE_CONST
 
 import config
-from device_config import BASE_CONST
 
 MCAST_GRP = '239.255.254.253'
 MCAST_PORT = 8427
@@ -40,7 +38,7 @@ def discover():
         data = data.decode('UTF-8', errors="ignore")
         try:
             process_discovery_packet(ip, data)
-        except:
+        except Exception:
             pass
 
 def process_discovery_packet(ip, data):
@@ -110,11 +108,11 @@ def DCID_Parse(file):
     for device in devices:
         model = device.find('Key').text
         model_name = device.find('ModelName').text
-        dcid = []
+        # dcid = []
         for dccid in device.find('DCIDList').iter('DCID'):
             try:
                 band = dccid.attrib['band']
-            except:
+            except Exception:
                 band = ''
 
             dev = {'model': model,'model_name':model_name, 'band':band }
