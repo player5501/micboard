@@ -1,7 +1,19 @@
 import { defineConfig } from 'vite';
 import path from 'path';
 
+import inject from '@rollup/plugin-inject';
+
 export default defineConfig({
+    plugins: [
+        inject({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery',
+        }),
+    ],
+    define: {
+        VERSION: JSON.stringify(process.env.npm_package_version),
+    },
     build: {
         outDir: 'static',
         emptyOutDir: true,

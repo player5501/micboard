@@ -1,5 +1,7 @@
 "use strict";
 
+
+
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import QRCode from 'qrcode';
@@ -124,7 +126,7 @@ function mapGroups() {
     }
   });
 
-  $('a.preset-link').each(function(index) {
+  $('a.preset-link').each(function (index) {
     const id = parseInt($(this).attr('id')[9], 10);
 
     $(this).click(() => {
@@ -226,7 +228,7 @@ function initialMap(callback) {
         mapGroups();
 
         if (micboard.config.slots.length < 1) {
-          setTimeout(function() {
+          setTimeout(function () {
             initConfigEditor();
           }, 125);
         }
