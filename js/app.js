@@ -16,6 +16,7 @@ import { keybindings } from './kbd.js';
 import { setBackground, setInfoDrawer } from './display.js';
 import { setTimeMode } from './chart-smoothie.js';
 import { initConfigEditor } from './config.js';
+import { initImageEditor } from './images.js';
 
 import '../css/colors.scss';
 import '../css/style.scss';
@@ -119,6 +120,11 @@ function mapGroups() {
     $('.collapse').collapse('hide');
   });
 
+  $('a#go-pictures').click(() => {
+    initImageEditor();
+    $('.collapse').collapse('hide');
+  });
+
   $('a#go-groupedit').click(() => {
     if (micboard.group !== 0) {
       groupEditToggle();
@@ -186,6 +192,9 @@ export function updateHash() {
   }
   if (micboard.settingsMode === 'CONFIG') {
     hash = '#settings=true'
+  }
+  if (micboard.settingsMode === 'IMAGES') {
+    hash = '#settings=images'
   }
   hash = hash.replace('&', '');
   history.replaceState(undefined, undefined, hash);
@@ -270,6 +279,11 @@ $(document).ready(() => {
   if (micboard.url.settings === 'true') {
     setTimeout(() => {
       initConfigEditor();
+      updateHash();
+    }, 100);
+  } else if (micboard.url.settings === 'images') {
+    setTimeout(() => {
+      initImageEditor();
       updateHash();
     }, 100);
   }

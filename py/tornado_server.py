@@ -155,6 +155,83 @@ class MicboardReloadConfigHandler(web.RequestHandler):
         self.write("restarting")
 
 
+class ImagesHandler(web.RequestHandler):
+    def get(self):
+        self.set_header('Content-Type', 'application/json')
+        files = file_list('.jpg')
+        self.write(json.dumps(files))
+
+    def post(self):
+        action = self.get_argument('action', None)
+        
+        if action == 'upload':
+            if 'file' not in self.request.files:
+                self.set_status(400)
+                self.write({'error': 'No file uploaded'})
+                return
+            
+            file_info = self.request.files['file'][0]
+            filename = file_info['filename']
+            
+            if not filename.lower().endswith('.jpg'):
+                self.set_status(400)
+                self.write({'error': 'Only .jpg files are allowed'})
+                return
+                
+            # Sanitize filename to prevent directory traversal
+            filename = os.path.basename(filename)
+            save_path = os.path.join(config.get_gif_dir(), filename)
+            
+            with open(save_path, 'wb') as f:
+                f.write(file_info['body'])
+            
+            self.write({'status': 'ok', 'filename': filename})
+
+        elif action == 'rename':
+            try:
+                data = json.loads(self.request.body)
+                old_name = os.path.basename(data.get('old_name'))
+                new_name = os.path.basename(data.get('new_name'))
+                
+                if not new_name.lower().endswith('.jpg'):
+                    self.set_status(400)
+                    self.write({'error': 'New name must end with .jpg'})
+                    return
+
+                old_path = os.path.join(config.get_gif_dir(), old_name)
+                new_path = os.path.join(config.get_gif_dir(), new_name)
+                
+                if os.path.exists(old_path):
+                    os.rename(old_path, new_path)
+                    self.write({'status': 'ok'})
+                else:
+                    self.set_status(404)
+                    self.write({'error': 'File not found'})
+            except Exception as e:
+                self.set_status(500)
+                self.write({'error': str(e)})
+
+        elif action == 'delete':
+            try:
+                data = json.loads(self.request.body)
+                filename = os.path.basename(data.get('filename'))
+                file_path = os.path.join(config.get_gif_dir(), filename)
+                
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+                    self.write({'status': 'ok'})
+                else:
+                    self.set_status(404)
+                    self.write({'error': 'File not found'})
+            except Exception as e:
+                self.set_status(500)
+                self.write({'error': str(e)})
+        
+        else:
+            self.set_status(400)
+            self.write({'error': 'Invalid action'})
+
+
 
 # https://stackoverflow.com/questions/12031007/disable-static-file-caching-in-tornado
 class NoCacheHandler(web.StaticFileHandler):
@@ -172,6 +249,7 @@ def twisted():
         (r'/api/group', GroupUpdateHandler),
         (r'/api/slot', SlotHandler),
         (r'/api/config', ConfigHandler),
+        (r'/api/images', ImagesHandler),
         # (r'/restart/', MicboardReloadConfigHandler),
         (r'/static/(.*)', web.StaticFileHandler, {'path': config.app_dir('static')}),
         (r'/bg/(.*)', NoCacheHandler, {'path': config.get_gif_dir()})
